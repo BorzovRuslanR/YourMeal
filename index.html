@@ -69,8 +69,8 @@
         </nav>
 
         <section class="catalog">
-            <div class="container">
-                <div class="catalog__order order order_open">
+            <div class="container catalog__container">
+                 <div class="catalog__order order"> <!-- order_open -->
                     <section class="order__wrapper">
                         <div class="order__wrap-title" tabindex="0" role="button">
                             <h2 class="order__title">Корзина</h2>
@@ -80,54 +80,45 @@
                         <div class="order__wrap_list">
                             <ul class="order__list">
                                 <li class="order__item">
-                                    <img src="img/burger-1-1.jpg" alt="Супер сырный">
+                                    <img class="order__image" src="img/burger-1-1.jpg" alt="Супер сырный">
 
                                     <div class="order__product">
                                         <h3 class="order__product-title">Супер сырный</h3>
                                         <p class="order__product-weight">512г</p>
-                                        <p class="order__product-price">
-                                            <span class="order__product-price">550</span>
-                                            <span class="currency">₽</span>
-                                        </p>
+                                        <p class="order__product-price">550<span class="currency">₽</span></p>
                                     </div>
 
-                                    <div class="order__product-count">
+                                    <div class="order__product-count count">
                                         <button class="count__minus">-</button>
                                         <p class="count__amount">1</p>
                                         <button class="count__plus">+</button>
                                     </div>
                                 </li>
                                 <li class="order__item">
-                                    <img src="img/free-1.jpg" alt="Картошка фри">
+                                    <img class="order__image" src="img/free-1.jpg" alt="Картошка фри">
 
                                     <div class="order__product">
                                         <h3 class="order__product-title">Картошка фри</h3>
                                         <p class="order__product-weight">180г</p>
-                                        <p class="order__product-price">
-                                            <span class="order__product-price">245</span>
-                                            <span class="currency">₽</span>
-                                        </p>
+                                        <p class="order__product-price">245<span class="currency">₽</span></p>
                                     </div>
 
-                                    <div class="order__product-count">
+                                    <div class="order__product-count count">
                                         <button class="count__minus">-</button>
                                         <p class="count__amount">2</p>
                                         <button class="count__plus">+</button>
                                     </div>
                                 </li>
                                 <li class="order__item">
-                                    <img src="img/hot-dog-1.jpg" alt="Жгучий хот-дог">
+                                    <img class="order__image" src="img/hot-dog-1.jpg" alt="Жгучий хот-дог">
 
                                     <div class="order__product">
                                         <h3 class="order__product-title">Жгучий хот-дог</h3>
                                         <p class="order__product-weight">245г</p>
-                                        <p class="order__product-price">
-                                            <span class="order__product-price">239</span>
-                                            <span class="currency">₽</span>
-                                        </p>
+                                        <p class="order__product-price">239<span class="currency">₽</span></p>
                                     </div>
 
-                                    <div class="order__product-count">
+                                    <div class="order__product-count count">
                                         <button class="count__minus">-</button>
                                         <p class="count__amount">1</p>
                                         <button class="count__plus">+</button>
@@ -255,5 +246,10 @@
             
         </section>
     </main>
+    <script>
+        document.querySelector('.order__wrap-title').addEventListener('click', () => {
+            document.querySelector('.order').classList.toggle('order_open')
+        })
+    </script>
 </body>
 </html>

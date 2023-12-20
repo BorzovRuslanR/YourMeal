@@ -1,0 +1,33 @@
+.modal {
+    position: fixed;
+    inset: 0;
+    border-color: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    overflow-y: auto;
+    display: none;
+}
+
+.modal_open {
+    display: flex;
+}
+
+.modal__main {
+    position: relative;
+    cursor: default;
+    margin: auto;
+}
+
+.modal__close {
+    color: #b1b1b1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    outline: 1px solid transparent;
+    outline-offset: 3px;
+}
+
+.modal__close:focus-visible {
+    color: #FF7020;
+    outline-color: #FF7020;
+    border-radius: 3px;
+}

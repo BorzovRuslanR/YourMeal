@@ -34,7 +34,7 @@
 }
 
 .order_open .order__wrap_title {
-    margin-bottom: 8px;   /* возможно потребуется оптимизация */
+    margin-bottom: 8px; 
 }
 
 .order__title {
@@ -122,7 +122,26 @@
     line-height: 100%;
     color: #FFFFFF;
     margin-bottom: 8px;
+    transition: transform .1s ease, background-color .3s ease-in-out;
 }
+
+.order__sumbit:hover {
+    background-color: #FFAB08;
+}
+
+.order__sumbit:focus-visible {
+    background-color: #f86310
+}
+
+.order__sumbit:active {
+    transform: translate(1px, 2px);
+}
+
+.order__sumbit:disabled {
+    background-color: #f9f9f9;
+    color: #acacac;
+}
+
 .order__wrap-apeal {
     display: flex;
     align-items: center;
@@ -177,6 +196,11 @@
 
     .order__wrap-title {
         margin-bottom: 12px;
+        pointer-events: none;
+    }
+
+    .order__wrap_title:after {
+        content: none;
     }
 
     .order__title {

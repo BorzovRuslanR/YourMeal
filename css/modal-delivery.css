@@ -121,6 +121,24 @@
     line-height: 100%;
     color: #FFFFFF;
     margin-right: 8px;
+    transition: transform .1s ease, background-color .3s ease-in-out;
+}
+
+.modal-delivery__sumbit:hover {
+    background-color: #FFAB08;
+}
+
+.modal-delivery__sumbit:focus-visible {
+    background-color: #f86310
+}
+
+.modal-delivery__sumbit:active {
+    transform: translate(1px, 2px);
+}
+
+.modal-delivery__sumbit:disabled {
+    background-color: #f9f9f9;
+    color: #acacac;
 }
 
 @media (min-width: 480px) {

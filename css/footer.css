@@ -44,6 +44,15 @@
 
 .footer__link-sn {
     color: #FF7020;
+    transition: color .3s ease-in-out;
+}
+
+
+.footer__link-phone:hover,
+.footer__link-phone:focus,
+.footer__link-sn:hover,
+.footer__link-sn:focus {
+  color: #FFAB08
 }
 
 .footer__development {
@@ -106,9 +115,11 @@
     margin-bottom: 24px;
     font-size: 24px;
   }
+
   .footer__title_sn {
     margin-bottom: 22px;
   }
+
   .footer__link-phone {
     font-size: 16px;
 }

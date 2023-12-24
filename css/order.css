@@ -16,7 +16,7 @@
 
 .order_open .order__wrapper {
     display: block;
-    z-index: 9999; /* Добавьте это свойство */
+    z-index: 9999;
 }
 
 

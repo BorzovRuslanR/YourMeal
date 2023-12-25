@@ -36,8 +36,8 @@ function updateUI(data) {
   
   let img = document.createElement('img');
   img.classList.add('product__image');
-  img.src = 'img/burger-6.jpg';
-  img.alt = item.name;
+  img.src = item.image;
+  img.alt = item.title;
   article.appendChild(img);
 
   
@@ -51,7 +51,7 @@ function updateUI(data) {
   title.classList.add('product__title');
   let detailButton = document.createElement('button');
   detailButton.classList.add('product__detail');
-  detailButton.textContent = item.name;
+  detailButton.textContent = item.title;
   title.appendChild(detailButton);
   article.appendChild(title);
 

@@ -35,7 +35,7 @@
     </header>
     <main>
         <nav class="navigation">
-            <div class="container">
+            <div class="container" id="dataContainer">
                 <ul class="navigation__list">
                     <li class="navigation__item">
                         <button class="navigation__button navigation__button_burger navigation__button_active">Бургеры</button>
@@ -386,11 +386,7 @@
         </button>
       </div>
     </div>
-    <script>
-        document.querySelector('.order__wrap-title').addEventListener('click', () => {
-            document.querySelector('.order').classList.toggle('order_open')
-        })
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
 

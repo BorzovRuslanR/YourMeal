@@ -73,8 +73,8 @@
 .navigation__button_dessert {
     background-image: url('../img/dessert.png');
 }
-.navigation__button_sause {
-    background-image: url('../img/sause.png');
+.navigation__button_sauce {
+    background-image: url('../img/sauce.png');
 }
 
 @media (min-width: 768px) {

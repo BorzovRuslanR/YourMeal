@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const navigationButtons = document.querySelectorAll('.navigation__button');
         const catalog = document.querySelector('.catalog__list');
+        const modal = document.querySelector('.modal');
+        const modalTitle = document.querySelector('.modal-product__title');
+        const modalImage = document.querySelector('.modal-product__image');
+        const modalProductDescription = document.querySelector('.modal-product__description');
+        const ingredientsList = document.querySelector('.ingredients');
+        const closeButton = document.querySelector('.modal__close');
+        const addToCartButtons = document.querySelectorAll('.product__add');
+        const orderList = document.querySelector('.order__list');
 
         function showProducts(category) {
           catalog.innerHTML = '';
@@ -65,6 +73,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
             li.appendChild(article);
             catalog.appendChild(li);
+
+            img.addEventListener('click', () => {
+              modalTitle.textContent = product.title;
+              modalImage.src = product.image;
+
+              modalProductDescription.textContent = product.description;
+
+              ingredientsList.innerHTML = '';
+              product.ingredients.forEach(ingredient => {
+                const li = document.createElement('li');
+                li.classList.add('ingredients__items');
+                li.textContent = ingredient;
+                ingredientsList.appendChild(li);
+              });
+              
+              modal.classList.add('modal_open');
+            });
           });
         }
 
@@ -87,6 +112,50 @@ document.addEventListener('DOMContentLoaded', function() {
             categoryTitle.textContent = button.textContent;
           });
         });
+
+        closeButton.addEventListener('click', () => {
+          modal.classList.remove('modal_open');
+        });
+
+        document.addEventListener('click', (event) => {
+          if (event.target === modal) {
+            modal.classList.remove('modal_open');
+          }
+        });
+
+        addToCartButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            
+            const card = button.closest('.product');
+            const title = card.querySelector('.product__title button').textContent;
+            const weight = card.querySelector('.product__weight').textContent;
+            const price = parseFloat(card.querySelector('.product__price').textContent);
+        
+            
+            const item = document.createElement('li');
+            item.classList.add('order__item');
+        
+            
+            item.innerHTML = `
+              <img class="order__image" src="img/burger-1-1.jpg" alt="Супер сырный">
+              <div class="order__product">
+                <h3 class="order__product-title">${title}</h3>
+                <p class="order__product-weight">${weight}</p>
+                <p class="order__product-price">${price}<span class="currency">₽</span></p>
+              </div>
+              <div class="order__product-count count">
+                <button class="count__minus">-</button>
+                <p class="count__amount">1</p>
+                <button class="count__plus">+</button>
+              </div>
+            `;
+        
+            orderList.appendChild(item);
+          });
+        });
+
+        
+
       } else {
         console.error('Ошибка запроса: ' + request.status);
       }
@@ -94,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function() {
   };
   request.send();
 });
-
 
 
 // const buttons = document.querySelectorAll('.navigation__button');

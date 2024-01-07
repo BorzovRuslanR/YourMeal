@@ -16,6 +16,8 @@ fetch('/db.json')
   const modalProductDescription = document.querySelector('.modal-product__description');
   const ingredientsList = document.querySelector('.ingredients');
   const closeButton = document.querySelector('.modal__close');
+  let totalAmount = 0;
+  let totalCount = 0;
 
   catalog.addEventListener('click', (event) => {
     console.log('Catalog clicked');
@@ -26,7 +28,11 @@ fetch('/db.json')
         const productData = data.find(p => p.id === product?.dataset?.id)
         const title = productData.title   
         const weight = productData.weight 
-        const price = productData.price   
+        const price = productData.price
+
+        totalAmount += productData.price;
+        totalCount++;
+        updateOrderSummary();
                 
         const item = document.createElement('li');
         item.classList.add('order__item');        
@@ -49,8 +55,56 @@ fetch('/db.json')
       }          
     }
   })
+
+  function updateOrderSummary() {
+    const totalAmountElement = document.querySelector('.order__total-amount');
+    const totalCountElement = document.querySelector('.order__count');
+    totalAmountElement.textContent = totalAmount;
+    totalCountElement.textContent = totalCount;
+  }
+
+  function handleCountMinus(event) {
+    const amountElement = event.target.nextElementSibling;
+    let amount = parseInt(amountElement.textContent);
+    if (amount > 0) {
+      amount--;
+      amountElement.textContent = amount;
+      const priceElement = event.target.closest('.order__item').querySelector('.order__product-price');
+      const price = parseInt(priceElement.textContent);
+      totalAmount -= price;
+      totalCount--;
+      if (amount === 0) {
+        const item = event.target.closest('.order__item');
+        item.remove();
+      }
+      updateOrderSummary();
+    }
+  }
   
+  function handleCountPlus(event) {
+    const amountElement = event.target.previousElementSibling;
+    let amount = parseInt(amountElement.textContent);
+    if (amount < 20) {
+      amount++;
+      amountElement.textContent = amount;
+      const priceElement = event.target.closest('.order__item').querySelector('.order__product-price');
+      const price = parseInt(priceElement.textContent);
+      totalAmount += price;
+      totalCount++;
+      updateOrderSummary();
+    }
+  }
+
   const orderList = document.querySelector('.order__list');
+
+  orderList.addEventListener('click', (event) => {
+    if (event.target.classList.contains('count__minus')) {
+      handleCountMinus(event);
+    } else if (event.target.classList.contains('count__plus')) {
+      handleCountPlus(event);
+    }
+  });
+  
 
   function showProducts(category) {
     catalog.innerHTML = '';

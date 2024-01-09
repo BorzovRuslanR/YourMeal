@@ -1,6 +1,4 @@
-document.querySelector('.order__wrap-title').addEventListener('click', () => {
-  document.querySelector('.order').classList.toggle('order_open')
-})
+
 
 fetch('/db.json')
 .then((response) => {
@@ -16,53 +14,98 @@ fetch('/db.json')
   const modalProductDescription = document.querySelector('.modal-product__description');
   const ingredientsList = document.querySelector('.ingredients');
   const closeButton = document.querySelector('.modal__close');
+  const skipButton = document.querySelector('.order__close');
   let totalAmount = 0;
   let totalCount = 0;
+  let totalAmountModal = 0;
+
+  skipButton.addEventListener('click', () => {
+    document.querySelector('.order').classList.toggle('order_open')
+  })
+
+  document.querySelector('.order__wrap-title').addEventListener('click', () => {
+    document.querySelector('.order').classList.toggle('order_open')
+  })
 
   catalog.addEventListener('click', (event) => {
-    console.log('Catalog clicked');
     if (event.target.classList.contains('product__add')) {
-      const product = event.target.closest('.product')
+      const product = event.target.closest('.product');
       if (product?.dataset?.id) {
-        console.log(product?.dataset?.id);
-        const productData = data.find(p => p.id === product?.dataset?.id)
-        const title = productData.title   
-        const weight = productData.weight 
-        const price = productData.price
-
+        const productData = data.find(p => p.id === product?.dataset?.id);
+        const title = productData.title;
+        const weight = productData.weight;
+        const price = productData.price;
+  
         totalAmount += productData.price;
         totalCount++;
         updateOrderSummary();
-                
-        const item = document.createElement('li');
-        item.classList.add('order__item');        
-        
-        item.innerHTML = `
-          <img class="order__image" src="${productData.image}" alt="">
-          <div class="order__product">
-            <h3 class="order__product-title">${title}</h3>
-            <p class="order__product-weight">${weight}</p>
-            <p class="order__product-price">${price}<span class="currency">₽</span></p>
-          </div>
-          <div class="order__product-count count">
-            <button class="count__minus">-</button>
-            <p class="count__amount">1</p>
-            <button class="count__plus">+</button>
-          </div>
-        `;
-    
+  
+        const item = createOrderItem(productData.image, title, weight, price, 1);
         orderList.appendChild(item);
-      }          
+      }
     }
-  })
+  });
 
+  catalog.addEventListener('click', (event) => {
+  if (event.target.classList.contains('modal-product__btn')) {
+    const product = event.target.closest('.modal-product');
+    if (product?.dataset?.id) {
+      const productData = data.find(p => p.id === product?.dataset?.id);
+      const title = productData.title;
+      const weight = productData.weight;
+      const price = productData.price;
+      const amountElement = product.querySelector('.count__amount');
+      const amount = parseInt(amountElement.textContent);
+
+      totalAmount += price * amount;
+      totalCount += amount;
+      updateOrderSummary();
+
+      const item = createOrderItem(productData.image, title, weight, price, amount);
+      orderList.appendChild(item);
+    }
+  }
+  });
+  
+  function handleModalCountMinus(event) {
+    const amountElement = event.target.nextElementSibling;
+    let amount = parseInt(amountElement.textContent);
+    if (amount > 0) {
+      amount--;
+      amountElement.textContent = amount;
+      const priceElementModal = event.target.closest('.order__item').querySelector('.modal-product__price');
+      const priceModal = parseInt(priceElementModal.textContent);
+      totalAmountModal -= priceModal;
+      updateOrderSummary();
+    }
+  }
+  
+  function handleModalCountPlus(event) {
+    const amountElement = event.target.previousElementSibling;
+    let amount = parseInt(amountElement.textContent);
+    if (amount < 20) {
+      amount++;
+      amountElement.textContent = amount;
+      const priceElementModal = event.target.closest('.order__item').querySelector('.modal-product__price');
+      const priceModal = parseInt(priceElementModal.textContent);
+      totalAmountModal += priceModal;
+      updateOrderSummary();
+    }
+  }
+  
+  const modalCountMinusBtn = document.querySelector('.modal-product__count .count__minus');
+  const modalCountPlusBtn = document.querySelector('.modal-product__count .count__plus');
+  
+  modalCountMinusBtn.addEventListener('click', handleModalCountMinus);
+  modalCountPlusBtn.addEventListener('click', handleModalCountPlus);
+  
   function updateOrderSummary() {
     const totalAmountElement = document.querySelector('.order__total-amount');
     const totalCountElement = document.querySelector('.order__count');
     totalAmountElement.textContent = totalAmount;
     totalCountElement.textContent = totalCount;
   }
-
+  
   function handleCountMinus(event) {
     const amountElement = event.target.nextElementSibling;
     let amount = parseInt(amountElement.textContent);
@@ -94,9 +137,9 @@ fetch('/db.json')
       updateOrderSummary();
     }
   }
-
+  
   const orderList = document.querySelector('.order__list');
-
+  
   orderList.addEventListener('click', (event) => {
     if (event.target.classList.contains('count__minus')) {
       handleCountMinus(event);
@@ -104,6 +147,27 @@ fetch('/db.json')
       handleCountPlus(event);
     }
   });
+  
+  function createOrderItem(imageSrc, title, weight, price, amount) {
+    const item = document.createElement('li');
+    item.classList.add('order__item');
+  
+    item.innerHTML = `
+      <img class="order__image" src="${imageSrc}" alt="">
+      <div class="order__product">
+        <h3 class="order__product-title">${title}</h3>
+        <p class="order__product-weight">${weight}</p>
+        <p class="order__product-price">${price}<span class="currency">₽</span></p>
+      </div>
+      <div class="order__product-count count">
+        <button class="count__minus">-</button>
+        <p class="count__amount">${amount}</p>
+        <button class="count__plus">+</button>
+      </div>
+    `;
+  
+    return item;
+  }
   
 
   function showProducts(category) {

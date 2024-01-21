@@ -8,6 +8,7 @@ fetch('/db.json')
 .then((data) => {
   const navigationButtons = document.querySelectorAll('.navigation__button');
   const catalog = document.querySelector('.catalog__list');
+  const modals = document.querySelectorAll('.modal');
   const modal = document.querySelector('.modal');
   const modalTitle = document.querySelector('.modal-product__title');
   const modalImage = document.querySelector('.modal-product__image');
@@ -50,6 +51,7 @@ fetch('/db.json')
       }
     }
   });
+
 // 1
   catalog.addEventListener('click', (event) => {
   if (event.target.classList.contains('modal-product__btn')) {
@@ -158,9 +160,31 @@ fetch('/db.json')
   // });
 
 
-  orderSubmitButton.addEventListener('click', () => {
-    document.querySelector('.modal_delivery').classList.toggle('modal_open')
-  })
+  // orderSubmitButton.addEventListener('click', () => {
+  //   document.querySelector('.modal_delivery').classList.toggle('modal_open')
+  // })
+
+const modalDelivery = document.querySelector('.modal_delivery');
+const modalProduct = document.querySelector('.modal_product');
+const deliveryCloseButton = modalDelivery.querySelector('.modal__close');
+const productCloseButton = modalProduct.querySelector('.modal__close');
+
+orderSubmitButton.addEventListener('click', () => {
+  modalDelivery.classList.toggle('modal_open');
+  document.querySelector('.order').classList.toggle('order_open')
+});
+
+document.addEventListener('click', (event) => {
+  const closeButtonClicked = event.target.closest('.modal__close');
+  if (closeButtonClicked === deliveryCloseButton) {
+    console.log('close delivery');
+    modalDelivery.classList.remove('modal_open');
+  } else if (closeButtonClicked === productCloseButton) {
+    console.log('close product');
+    modalProduct.classList.remove('modal_open');
+  }
+});
+
   
   function createOrderItem(imageSrc, title, weight, price, amount) {
     const item = document.createElement('li');
@@ -227,6 +251,7 @@ fetch('/db.json')
 
       const addButton = document.createElement('button');
       addButton.classList.add('product__add');
+      addButton.classList.add('product__added'); // add product added
       addButton.setAttribute('type', 'button');
       addButton.textContent = 'Добавить';
       article.appendChild(addButton);
@@ -273,15 +298,16 @@ fetch('/db.json')
     });
   });
 
-  closeButton.addEventListener('click', () => {
-    modal.classList.remove('modal_open');
-  });
+  // closeButton.addEventListener('click', () => {
+  //   console.log('close');
+  //   modal.classList.remove('modal_open');
+  // });
 
-  document.addEventListener('click', (event) => {
-    if (event.target === modal) {
-      modal.classList.remove('modal_open');
-    }
-  });
+  // document.addEventListener('click', (event) => {
+  //   if (event.target === modals) {
+  //     modal.classList.remove('modal_open');
+  //   }
+  // });
 
   })
     .catch((error) => {

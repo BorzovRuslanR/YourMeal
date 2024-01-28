@@ -33,24 +33,58 @@ fetch('/db.json')
     document.querySelector('.order').classList.toggle('order_open')
   });
 
-  catalog.addEventListener('click', (event) => {
-    if (event.target.classList.contains('product__add')) {
-      const product = event.target.closest('.product');
-      if (product?.dataset?.id) {
-        const productData = data.find(p => p.id === product?.dataset?.id);
-        const title = productData.title;
-        const weight = productData.weight;
-        const price = productData.price;
+  // catalog.addEventListener('click', (event) => {
+  //   if (event.target.classList.contains('product__add')) {
+  //     const product = event.target.closest('.product');
+  //     if (product?.dataset?.id) {
+  //       const productData = data.find(p => p.id === product?.dataset?.id);
+  //       const title = productData.title;
+  //       const weight = productData.weight;
+  //       const price = productData.price;
   
-        totalAmount += productData.price;
-        totalCount++;
-        updateOrderSummary();
+  //       totalAmount += productData.price;
+  //       totalCount++;
+  //       updateOrderSummary();
   
-        const item = createOrderItem(productData.image, title, weight, price, 1);
-        orderList.appendChild(item);
+  //       const item = createOrderItem(productData.image, title, weight, price, 1);
+  //       orderList.appendChild(item);
+  //     }
+  //   }
+  // });
+
+
+  const addedImages = [];
+
+catalog.addEventListener('click', (event) => {
+  if (event.target.classList.contains('product__add')) {
+    const product = event.target.closest('.product');
+    if (product) {
+      const productData = data.find(p => p.id === product.dataset.id);
+      const title = productData.title;
+      const weight = productData.weight;
+      const price = productData.price;
+
+      const productImage = productData.image;
+
+      // Проверяем, содержится ли уже такая ссылка на картинку в массиве addedImages
+      if (addedImages.includes(productImage)) {
+        // Если товар уже есть в корзине, просто выходим из функции
+        return;
       }
+
+      totalAmount += productData.price;
+      totalCount++;
+      updateOrderSummary();
+
+      const item = createOrderItem(productImage, title, weight, price, 1);
+      orderList.appendChild(item);
+
+      // Добавляем ссылку на картинку товара в массив addedImages
+      addedImages.push(productImage);
+      console.log(addedImages);
     }
-  });
+  }
+});
 
 // 1
   catalog.addEventListener('click', (event) => {
@@ -112,7 +146,7 @@ fetch('/db.json')
     totalAmountElement.textContent = totalAmount;
     totalCountElement.textContent = totalCount;
   }
-  
+
   function handleCountMinus(event) {
     const amountElement = event.target.nextElementSibling;
     let amount = parseInt(amountElement.textContent);
@@ -123,13 +157,45 @@ fetch('/db.json')
       const price = parseInt(priceElement.textContent);
       totalAmount -= price;
       totalCount--;
+  
       if (amount === 0) {
         const item = event.target.closest('.order__item');
         item.remove();
+  
+        const imageElement = item.querySelector('.order__image');
+        const productImage = imageElement.getAttribute('src');
+  
+        // Удаляем ссылку на картинку из массива addedImages
+        const imageIndex = addedImages.findIndex(image => image === productImage);
+        console.log(addedImages);
+        console.log(productImage);
+        if (imageIndex !== -1) {
+          addedImages.splice(imageIndex, 1);
+        }
+        console.log(addedImages);
       }
+  
       updateOrderSummary();
     }
   }
+  
+  // function handleCountMinus(event) {
+  //   const amountElement = event.target.nextElementSibling;
+  //   let amount = parseInt(amountElement.textContent);
+  //   if (amount > 0) {
+  //     amount--;
+  //     amountElement.textContent = amount;
+  //     const priceElement = event.target.closest('.order__item').querySelector('.order__product-price');
+  //     const price = parseInt(priceElement.textContent);
+  //     totalAmount -= price;
+  //     totalCount--;
+  //     if (amount === 0) {
+  //       const item = event.target.closest('.order__item');
+  //       item.remove();
+  //     }
+  //     updateOrderSummary();
+  //   }
+  // }
   
   function handleCountPlus(event) {
     const amountElement = event.target.previousElementSibling;

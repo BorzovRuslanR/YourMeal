@@ -86,59 +86,85 @@ catalog.addEventListener('click', (event) => {
   }
 });
 
-// 1
-  catalog.addEventListener('click', (event) => {
-  if (event.target.classList.contains('modal-product__btn')) {
-    const product = event.target.closest('.modal-product');
-    if (product?.dataset?.id) {
-      const productData = data.find(p => p.id === product?.dataset?.id);
-      const title = productData.title;
-      const weight = productData.weight;
-      const price = productData.price;
-      const amountElement = product.querySelector('.count__amount');
-      const amount = parseInt(amountElement.textContent);
+// 1 функционал добавления товара в корзину с помощью модального окна
+const modalProductBtn = document.querySelector('.modal-product .modal-product__btn');
 
-      totalAmount += price * amount;
-      totalCount += amount;
-      updateOrderSummary();
+modalProductBtn.addEventListener('click', (event) => {
+  const product = event.target.closest('.modal-product');
+  if (product) {
+    const productData = getProductDataFromModal(product);
+    const title = productData.title;
+    const weight = productData.weight;
+    const price = productData.price;
 
-      const item = createOrderItem(productData.image, title, weight, price, amount);
-      orderList.appendChild(item);
+    const productImage = productData.image;
+
+    // Проверяем, содержится ли уже такая ссылка на картинку в массиве addedImages
+    if (addedImages.includes(productImage)) {
+      // Если товар уже есть в корзине, просто выходим из функции
+      return;
     }
+
+    totalAmount += productData.price;
+    totalCount++;
+    updateOrderSummary();
+
+    const item = createOrderItem(productImage, title, weight, price, 1);
+    orderList.appendChild(item);
+
+    // Добавляем ссылку на картинку товара в массив addedImages
+    addedImages.push(productImage);
+    console.log(addedImages);
   }
-  });
+});
+
+function getProductDataFromModal(product) {
+  const titleElement = product.querySelector('.modal-product__title');
+  const weightElement = product.querySelector('.ingredients__calories');
+  const priceElement = product.querySelector('.modal-product__price');
+  const imageElement = product.querySelector('.modal-product__image');
+
+  const title = titleElement ? titleElement.textContent : '';
+  const weight = weightElement ? weightElement.textContent : '';
+  const price = priceElement ? parseFloat(priceElement.textContent) : 0;
+  const image = imageElement ? imageElement.getAttribute('src') : '';
+
+  return { title, weight, price, image };
+}
+
+
   
-  function handleModalCountMinus(event) {
-    const amountElement = event.target.nextElementSibling;
-    let amount = parseInt(amountElement.textContent);
-    if (amount > 0) {
-      amount--;
-      amountElement.textContent = amount;
-      const priceElementModal = event.target.closest('.order__item').querySelector('.modal-product__price');
-      const priceModal = parseInt(priceElementModal.textContent);
-      totalAmountModal -= priceModal;
-      updateOrderSummary();
-    }
-  }
+  // function handleModalCountMinus(event) {
+  //   const amountElement = event.target.nextElementSibling;
+  //   let amount = parseInt(amountElement.textContent);
+  //   if (amount > 0) {
+  //     amount--;
+  //     amountElement.textContent = amount;
+  //     const priceElementModal = event.target.closest('.order__item').querySelector('.modal-product__price');
+  //     const priceModal = parseInt(priceElementModal.textContent);
+  //     totalAmountModal -= priceModal;
+  //     updateOrderSummary();
+  //   }
+  // }
   
-  function handleModalCountPlus(event) {
-    const amountElement = event.target.previousElementSibling;
-    let amount = parseInt(amountElement.textContent);
-    if (amount < 20) {
-      amount++;
-      amountElement.textContent = amount;
-      const priceElementModal = event.target.closest('.order__item').querySelector('.modal-product__price');
-      const priceModal = parseInt(priceElementModal.textContent);
-      totalAmountModal += priceModal;
-      updateOrderSummary();
-    }
-  }
+  // function handleModalCountPlus(event) {
+  //   const amountElement = event.target.previousElementSibling;
+  //   let amount = parseInt(amountElement.textContent);
+  //   if (amount < 20) {
+  //     amount++;
+  //     amountElement.textContent = amount;
+  //     const priceElementModal = event.target.closest('.order__item').querySelector('.modal-product__price');
+  //     const priceModal = parseInt(priceElementModal.textContent);
+  //     totalAmountModal += priceModal;
+  //     updateOrderSummary();
+  //   }
+  // }
   
-  const modalCountMinusBtn = document.querySelector('.modal-product__count .count__minus');
-  const modalCountPlusBtn = document.querySelector('.modal-product__count .count__plus');
+  // const modalCountMinusBtn = document.querySelector('.modal-product__count .count__minus');
+  // const modalCountPlusBtn = document.querySelector('.modal-product__count .count__plus');
   
-  modalCountMinusBtn.addEventListener('click', handleModalCountMinus);
-  modalCountPlusBtn.addEventListener('click', handleModalCountPlus);
+  // modalCountMinusBtn.addEventListener('click', handleModalCountMinus);
+  // modalCountPlusBtn.addEventListener('click', handleModalCountPlus);
   // 2
   function updateOrderSummary() {
     const totalAmountElement = document.querySelector('.order__total-amount');
@@ -235,9 +261,18 @@ const modalProduct = document.querySelector('.modal_product');
 const deliveryCloseButton = modalDelivery.querySelector('.modal__close');
 const productCloseButton = modalProduct.querySelector('.modal__close');
 
+// orderSubmitButton.addEventListener('click', () => {
+//   modalDelivery.classList.toggle('modal_open');
+//   document.querySelector('.order').classList.toggle('order_open')
+// });
+
 orderSubmitButton.addEventListener('click', () => {
+  if (totalCount === 0) {
+    return; // Если корзина пуста, просто выходим из функции
+  }
+
   modalDelivery.classList.toggle('modal_open');
-  document.querySelector('.order').classList.toggle('order_open')
+  document.querySelector('.order').classList.toggle('order_open');
 });
 
 document.addEventListener('click', (event) => {

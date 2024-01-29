@@ -22,7 +22,7 @@
 
 
 ## Для связи
-Telegram: @TailorRus
-WhatsApp: 89064009975
-e-mail: menejer.r@yandex.com
-Tel. 89064009975
+- Telegram: @TailorRus
+- WhatsApp: 89064009975
+- e-mail: menejer.r@yandex.com
+- Tel. 89064009975
